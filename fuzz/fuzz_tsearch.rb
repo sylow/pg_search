@@ -1,6 +1,7 @@
 require "bundler/setup"
 require "pg_search"
 require 'fuzzbert'
+require "securerandom"
 
 begin
   require "pg"
@@ -52,11 +53,22 @@ end
 
 fuzz "tsearch search phrases" do
   deploy do |data|
-    connection = ActiveRecord::Base.connection.reconnect!
-    FuzzModel.search(data)
+    begin
+      FuzzModel.search(data)
+    rescue
+      puts $!
+      # require "pry"
+      # binding.pry
+    end
   end
 
   data "completely random" do
-    FuzzBert::Generators.random_b64
+    Proc.new do
+      s = ""
+      1024.times do
+        s << SecureRandom.hex(2).to_i(16) rescue nil
+      end
+      s
+    end
   end
 end
