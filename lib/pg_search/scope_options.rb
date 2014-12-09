@@ -13,7 +13,7 @@ module PgSearch
     end
 
     def apply(scope)
-      base_scope = scope.all.select_values.empty?
+      base_scope = scope.scoped.select_values.empty?
 
       if base_scope
         all_columns = "#{quoted_table_name}.*"
