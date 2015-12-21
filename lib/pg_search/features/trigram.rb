@@ -25,7 +25,7 @@ module PgSearch
 
       def similarity
         Arel::Nodes::NamedFunction.new(
-          "similarity",
+          "public.similarity",
           [
             normalized_document,
             normalized_query
